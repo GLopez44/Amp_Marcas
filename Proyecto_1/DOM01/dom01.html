@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Introduce un numero entre(1-100)</h1>
+    <input type="number" id="miImput"/>
+    <button id="miBoton">!Dame!</button>
+    <p id="miParrafo">Parrafo</p>
+    <img id="Imagen1" src="img/Porche1.png">
+    <button id="MiBoton2">Cambia</button>
+    <button id="MiBoton3">Suena</button>
+    <button id="MiBoton4">Pausa</button>
+
+
+    <script>
+
+        let numero_oculto = Math.floor(Math.random() * 100)+1;
+
+        let MiParrafo = document.getElementById("miParrafo");
+
+        let MiImput = document.getElementById("miImput");
+
+        let Darle = document.getElementById("miBoton");
+
+        let MiBoton2 = document.getElementById("MiBoton2");
+
+        let Imagen1 = document.getElementById("Imagen1");
+
+        let MiBoton3 = document.getElementById("MiBoton3");
+
+        let MiBoton4 = document.getElementById("MiBoton4");
+
+        let audio = new Audio();
+
+        audio.src = "sonidos/Audio1.mp3";
+
+        MiBoton4.addEventListener('click',() => {
+
+            audio.pause();
+        })
+
+        MiBoton3.addEventListener('click',() => {
+
+            audio.play();
+        })
+
+        MiBoton2.addEventListener('click',() => {
+
+            Imagen1.src = "img/Porche2.avif";
+        })
+
+        Darle.addEventListener('click',() => {
+
+            let numero_Imput = parseInt(MiImput.value,10)
+
+
+            if(numero_oculto == numero_Imput){
+
+                MiParrafo.textContent = "Enhorabuena";
+
+                MiParrafo.style.color = "green";
+            }
+
+            else if (Math.abs(numero_oculto-numero_Imput) < 3){
+
+                MiParrafo.textContent = "QUEMANDOOOO";
+
+                MiParrafo.style.color = "red";
+            }
+
+            else if(Math.abs(numero_oculto-numero_Imput) < 8){
+
+                MiParrafo.textContent = "MUYYY CALIENTEE";
+
+                MiParrafo.style.color = "orange";
+            }
+
+            else if(Math.abs(numero_oculto-numero_Imput) < 13){
+
+                MiParrafo.textContent = "CALIENTEE";
+
+                MiParrafo.style.color = "yellow";
+            }
+
+            else if(Math.abs(numero_oculto-numero_Imput) < 18){
+
+                MiParrafo.textContent = "TEMPLADOO";
+            }
+
+            else if(Math.abs(numero_oculto-numero_Imput) < 23){
+
+                MiParrafo.textContent = "FRESQUIVIRIS";
+
+                MiParrafo.style.color = "blue";
+            }
+
+            else{
+                MiParrafo.textContent = "FRIIIO HELAO";
+
+                MiParrafo.style.color = "purple";
+            }
+            oculto = 10
+        }
+        );
+
+    </script>
+
+</body>
+</html>
