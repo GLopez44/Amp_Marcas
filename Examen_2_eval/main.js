@@ -80,3 +80,10 @@ function menor15(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o){
 }
 
 console.log(menor15(1,5,6,8,4,10,25,-6,48,95,2));
+
+//Intercambia las posiciones de los datos del array//
+
+const aPersonas = ["Jose","Chema","Pepe","Bartolito","Begona"];
+let aux = aPersonas[1];
+aPersonas[1] = aPersonas[2];
+aPersonas[2] = aux;
