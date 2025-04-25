@@ -87,3 +87,34 @@ const aPersonas = ["Jose","Chema","Pepe","Bartolito","Begona"];
 let aux = aPersonas[1];
 aPersonas[1] = aPersonas[2];
 aPersonas[2] = aux;
+
+//Crea una matriz de 3x3 numerica//
+
+let matriz = [
+    [1,2,3],
+    [4,5,6],
+    [7,8,9]
+];
+console.log(matriz);
+console.log(matriz[1][2]); ///Imprime solo el numero de 6//
+
+//Crear un objeto que modele a un alumno con su nombre, lista y saignatura//
+let alumno = {
+    nombre:"David",
+    nLista:15,
+    asignatura:"ISO"
+};
+console.log(alumno);
+
+//Haz una funcion que deculva el lanzamiento de un dado de 10 caras//
+function Dado10(){
+    return Math.floor(Math.random()* 10)+1;
+}
+
+//Codigo en javascrip que al pulsar al boton ponga verde el texto//
+ const miBoton = document.getElementById("miBoton");
+ 
+ miBoton.addEventListener('click' , () => {
+    let parra = document.getElementById("miParrafo");
+    parra.style.color="green";
+ });
