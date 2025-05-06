@@ -1,3 +1,4 @@
+function init()
 
 const miBoton = document.getElementById("Bu");
 
