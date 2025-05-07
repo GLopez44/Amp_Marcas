@@ -1,10 +1,11 @@
-function init()
+function init(){
+    
+    const miBoton = document.getElementById("Bu");
 
-const miBoton = document.getElementById("Bu");
-
-miBoton.addEventListener('click' , () => {
+    miBoton.addEventListener('click' , () => {
     let miClave = document.getElementById("Clave").value;
     let Valor = document.getElementById("Valor").value;
 
     localStorage.setItem(miClave,miBoton)
 });
+}
