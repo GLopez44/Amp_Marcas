@@ -4,22 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-
-    <script src="main.js"></script>
-
     <style>
-        canvas{
+        canvas
+        {
             background: grey;
             border: 2px solid black;
             display: block;
             margin: 0 auto;
         }
+
+        
+        #b1{
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
     </style>
 
 </head>
-
 <body>
     <canvas id="gameCanvas" width="800" height="400"></canvas>
+
 
     <script>
         const canvas = document.getElementById('gameCanvas');
@@ -28,18 +34,111 @@
         let p1 = {
             x: 50,
             y: 150,
-            w: 30,
-            h: 60,
+            w:30,
+            h:60,
+            paso: 5
         };
+        const diana =
+        {
+            x: 700,
+            y: 150,
+            w:50,
+            h:50,
+            imagen: new Image()
 
-        function pintarJugador(){
+        };
+        let bala = null;
+        let existe_bala = false;
+
+        diana.imagen.src = "images/diana.png";
+
+        function pintarJugador() 
+        {
             ctx.fillStyle = 'red';
-            ctx.fillRect(p1.x.p1.y.p1.w.p1.h);
+            ctx.fillRect(p1.x,p1.y,p1.w,p1.h);    
+        }
+        function pintarDiana() 
+        {           
+            ctx.drawImage(diana.imagen,diana.x,diana.y,diana.w,diana.h);  
         }
 
-        pintarJugador();
+        function pintarBala()
+        {
+            if (existe_bala)
+            {
+                bala.x = bala.x + bala.velocidad;
+                
+                
+                ctx.fillStyle='black';
+                ctx.beginPath();
+                ctx.arc(bala.x ,bala.y,6,0,Math.PI*2);
+                //ctx.stroke();
+                ctx.fill();
+
+                // si nos salimos del campo que no haya bala
+                if ((existe_bala) && (bala.x>canvas.width))
+                {
+                    existe_bala=false;
+                }  
+            }         
+        }
+        //diana.imagen.onload = function (){  };
+
+        document.addEventListener('keydown', (e) => {
+
+            if (e.key === 'ArrowUp')
+            {
+                p1.y = p1.y - p1.paso;
+            }
+            else if (e.key === 'ArrowDown')
+            {
+                p1.y = p1.y + p1.paso;
+            }
+            else if (e.code === 'Space')
+            {
+                if (!existe_bala)
+                {
+                    existe_bala=true;
+                    bala = {
+                        x:p1.x + p1.w,
+                        y:p1.y,
+                        velocidad:7
+                    }
+
+                }               
+            }
+
+        } );
+
+        
+        document.getElementById('b1').addEventListener('click',() => {
+            if (!existe_bala)
+                {
+                    existe_bala=true;
+                    bala = {
+                    x:p1.x + p1.w,
+                    y:p1.y,
+                    velocidad:7
+                }
+
+            }
+        });
+
+
+        function bucleJuego() 
+        {
+            ctx.clearRect (0,0,canvas.width,canvas.height);
+
+            pintarJugador();
+            pintarDiana();
+            pintarBala();
+
+            requestAnimationFrame(bucleJuego);
+        }
+
+        // Arranque el juego
+        bucleJuego();
 
     </script>
-
 </body>
 </html>
