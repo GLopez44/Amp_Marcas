@@ -25,6 +25,7 @@
 </head>
 <body>
     <canvas id="gameCanvas" width="800" height="400"></canvas>
+    <button id="b1">Disparar</button>
 
 
     <script>
@@ -75,6 +76,18 @@
                 //ctx.stroke();
                 ctx.fill();
 
+                //hay colision con diana
+
+                if(
+                    (bala.x>=diana.x && bala.x <= diana.x + diana.w)
+                    &&
+                    (bala.y>=diana.y && bala.y <= diana.y + diana.h)
+                )
+                {
+                    console.log("OK")
+                }
+
+                
                 // si nos salimos del campo que no haya bala
                 if ((existe_bala) && (bala.x>canvas.width))
                 {
