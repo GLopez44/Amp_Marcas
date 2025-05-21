@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>El Escondite Inglés</title>
+  <link rel="stylesheet" href="main.css"/>
+</head>
+<body>
+  <h1>El Escondite Inglés</h1>
+
+  <div id="seleccion-personajes">
+    <h2>Elige tu personaje</h2>
+    <form id="form-personajes">
+      <div id="seleccion-jugadores"></div>
+      <button type="submit">Iniciar juego</button>
+    </form>
+  </div>
+
+  <div id="numeros"></div>
+  <div id="caminos"></div>
+  <div id="jugadores-container" class="jugadores"></div>
+  <button id="sacar-btn" disabled>Sacar dados</button>
+  <div id="mensaje"></div>
+  <div id="dados-acumulados"></div>
+
+  <script>
+    const NUM_CASILLAS = 10;
+    const iconosDisponibles = ["🐵", "🦖", "🐳", "🐸", "🐱", "🐰", "🐼", "🐙", "🦤", "💍‍♂️", "💍‍♀️", "🐌", "🥜"];
+    let iconosJugador = [], elecciones = [false, false, false];
+
+    let jugadores = Array.from({ length: 3 }, (_, i) => ({
+      nombre: `Jugador ${i + 1}`, posicion: 1, andando: null, corazon: false
+    }));
+
+    const el = id => document.getElementById(id);
+    const tirar = tipo => dados[tipo][Math.floor(Math.random() * 6)];
+    const dados = {
+      negro1: [1, 1, 1, 1, 2, 2],
+      negro2: [1, 1, 1, 1, 0, 0],
+      negro3: [1, 1, 0, 0, 0, 0],
+      rojo: [1, 1, 1, 1, 1, 0]
+    };
+
+    let bolsaOriginal = ['negro1', 'negro2', 'negro3', 'rojo'], bolsa = [...bolsaOriginal], negrosAcum = [];
+
+    function dibujarNumeros() {
+      el("numeros").innerHTML = "";
+      for (let i = 1; i <= NUM_CASILLAS; i++) {
+        const numero = document.createElement("div");
+        numero.className = "numero-casilla";
+        numero.textContent = i;
+        el("numeros").appendChild(numero);
+      }
+    }
+
+    function dibujarCamino() {
+      el("caminos").innerHTML = "";
+      jugadores.forEach((_, idx) => {
+        const fila = document.createElement("div");
+        fila.className = "camino";
+        for (let i = 1; i <= NUM_CASILLAS; i++) {
+          const casilla = document.createElement("div");
+          casilla.className = "casilla" + (i === NUM_CASILLAS ? " meta" : "");
+          fila.appendChild(casilla);
+        }
+        el("caminos").appendChild(fila);
+      });
+    }
+
+    function actualizarPosiciones() {
+      document.querySelectorAll(".jugador").forEach(e => e.remove());
+      jugadores.forEach((j, i) => {
+        const casilla = el("caminos").children[i].children[j.posicion - 1];
+        const icono = document.createElement("div");
+        icono.className = "jugador";
+        icono.textContent = iconosJugador[i] + (j.corazon ? " ❤️" : "");
+        casilla.appendChild(icono);
+      });
+    }
+
+    function crearControles() {
+      el("jugadores-container").innerHTML = jugadores.map((j, i) => `
+        <div class="jugador-info">
+          <strong>${j.nombre}</strong><br/>
+          Posición: ${j.posicion}<br/>
+          Estado: <span id="estado-${i}">${j.andando === null ? "Pendiente" : j.andando ? "Andando" : "Parado"}</span><br/>
+          <div class="acciones">
+            <button data-i="${i}" data-a="andar">Andar</button>
+            <button data-i="${i}" data-a="parar">Pararse</button>
+          </div>
+        </div>
+      `).join("");
+
+      document.querySelectorAll(".acciones button").forEach(b => {
+        b.onclick = () => {
+          let i = +b.dataset.i, a = b.dataset.a;
+          jugadores[i].andando = a === "andar";
+          elecciones[i] = true;
+          el(`estado-${i}`).textContent = a === "andar" ? "Andando" : "Parado";
+          if (elecciones.every(e => e)) {
+            el("sacar-btn").disabled = false;
+            el("mensaje").textContent = "Todos eligieron. Presiona 'Sacar dados'.";
+          }
+        };
+      });
+    }
+
+    const sacarDado = () => bolsa.splice(Math.random() * bolsa.length | 0, 1)[0];
+
+    function jugarTurno() {
+      el("mensaje").innerHTML = "";
+      el("sacar-btn").disabled = true;
+      const dado = sacarDado();
+      el("mensaje").innerHTML += `<div><strong>Dado sacado:</strong> ${dado}</div>`;
+
+      if (dado === "rojo" || negrosAcum.length === 2) bolsa = [...bolsaOriginal];
+      if (dado.startsWith("negro")) negrosAcum.push(dado);
+
+      jugadores.forEach(j => {
+        if (!j.andando) {
+          if (dado === "rojo" && !j.corazon) {
+            j.corazon = true;
+            el("mensaje").innerHTML += `<div>${j.nombre} parado sacó rojo y gana ❤️</div>`;
+          } else {
+            el("mensaje").innerHTML += `<div>${j.nombre} parado sacó ${dado}</div>`;
+          }
+        } else {
+          if (dado === "rojo") {
+            if (j.corazon) {
+              j.corazon = false;
+              el("mensaje").innerHTML += `<div>${j.nombre} pierde ❤️ con rojo</div>`;
+            } else {
+              const r = negrosAcum.concat("rojo").reduce((a, b) => a + tirar(b), 0);
+              j.posicion = Math.max(1, j.posicion - r);
+              el("mensaje").innerHTML += `<div>${j.nombre} retrocede ${r}</div>`;
+            }
+            negrosAcum = [];
+          } else {
+            const s = negrosAcum.reduce((a, b) => a + tirar(b), 0);
+            j.posicion = Math.min(NUM_CASILLAS, j.posicion + s);
+            el("mensaje").innerHTML += `<div>${j.nombre} anda con ${s}</div>`;
+          }
+        }
+      });
+
+      el("dados-acumulados").textContent = negrosAcum.length ? `Dados negros: ${negrosAcum.length}` : "";
+      actualizarPosiciones();
+
+      const ganadores = jugadores.filter(j => j.posicion >= NUM_CASILLAS);
+      if (ganadores.length) {
+        el("mensaje").innerHTML += `<div>🎉 Ganador: ${ganadores.map(j => j.nombre).join(", ")}</div>`;
+        document.querySelectorAll(".acciones button").forEach(b => b.disabled = true);
+        return;
+      }
+
+      elecciones = [false, false, false];
+      crearControles();
+    }
+
+    function iniciar() {
+      const contenedor = el("seleccion-jugadores");
+      contenedor.innerHTML = jugadores.map((j, i) => {
+        const opciones = iconosDisponibles.map(icono => `<option value="${icono}">${icono}</option>`).join("");
+        return `<div><label>Jugador ${i + 1}:</label><select name="jugador-${i}" required>${opciones}</select></div>`;
+      }).join("");
+
+      el("form-personajes").onsubmit = e => {
+        e.preventDefault();
+        const usados = new Set();
+        iconosJugador = jugadores.map((_, i) => {
+          const valor = e.target[`jugador-${i}`].value;
+          if (usados.has(valor)) {
+            alert("Cada jugador debe elegir un personaje único.");
+            throw new Error("Repetido");
+          }
+          usados.add(valor);
+          return valor;
+        });
+        el("seleccion-personajes").style.display = "none";
+        dibujarNumeros();
+        dibujarCamino();
+        actualizarPosiciones();
+        crearControles();
+        el("sacar-btn").onclick = jugarTurno;
+      };
+    }
+
+    iniciar();
+  </script>
+</body>
+</html>

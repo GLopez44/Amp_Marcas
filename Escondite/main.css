@@ -1,0 +1,105 @@
+body {
+    font-family: sans-serif;
+    max-width: 700px;
+    margin: auto;
+    padding: 20px;
+    animation: moverFondo 10s linear infinite;
+    background-size: 300% 100%;
+    background-image: -webkit-linear-gradient(left,blue,rgb(48, 187, 197),rgb(128, 219, 204),blue);
+  }
+
+  @keyframes moverFondo {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+  }
+
+  h1 {
+    text-align: center;
+    color: rgb(25, 245, 36);
+    font: oblique bold 300% cursive;
+  }
+
+  #numeros {
+    display: flex;
+    gap: 5px;
+    justify-content: flex-start;
+  }
+
+  .numero-casilla {
+    width: 44px;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  #caminos {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+  }
+
+  .camino {
+    display: flex;
+    gap: 5px;
+  }
+
+  .casilla {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .meta {
+    background: rgb(10, 228, 83);
+    color: #fff;
+    font-weight: bold;
+  }
+
+  .jugador {
+    position: absolute;
+    font-size: 22px;
+  }
+
+  .jugadores {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .jugador-info {
+    border: 1px solid #ccc;
+    padding: 10px;
+    flex: 1;
+    min-width: 180px;
+  }
+
+  .acciones {
+    margin-top: 5px;
+  }
+
+  button {
+    margin: 2px;
+  }
+
+  #mensaje, #dados-acumulados {
+    margin-top: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+
+  #seleccion-personajes {
+    margin-bottom: 20px;
+  }
+
+  #seleccion-personajes h2 {
+    margin-bottom: 10px;
+    color: #000000;
+  }
+
+  #seleccion-jugadores > div {
+    margin-bottom: 8px;
+  }
